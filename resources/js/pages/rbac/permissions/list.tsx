@@ -1,11 +1,13 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
-
+import { Pagination, PaginationContent, PaginationItem, PaginationLink } from '@/components/ui/pagination';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-
 import { Head, router, usePage } from '@inertiajs/react';
+import { DateTime } from 'luxon';
+import { useEffect } from 'react';
+import { toast } from 'sonner';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -39,14 +41,19 @@ type Props = {
 export default function Permissions() {
     const { props } = usePage<Props>();
     const { permissions, success } = props;
-    console.log('Permissions:', props);
+    useEffect(() => {
+        if (success) {
+            toast.success('Success', {
+                description: success,
+            });
+        }
+    }, [success]);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Permissions" />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-                {success && <div className="rounded-md bg-green-100 px-4 py-2 text-green-800">{success}</div>}
-                <Card className="m-auto w-full max-w-xl">
+                <Card className="mx-auto w-full max-w-6xl p-6 shadow-lg">
                     <CardHeader>
                         <CardTitle className="text-center text-lg font-semibold">Permissions List</CardTitle>
 
@@ -55,55 +62,60 @@ export default function Permissions() {
                         </Button>
                     </CardHeader>
                     <CardContent>
-                        <table className="mt-4 w-full table-auto border-collapse border border-gray-200">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Name</th>
-                                    <th>Created At</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>#</TableHead>
+                                    <TableHead>Name</TableHead>
+                                    <TableHead>Created At</TableHead>
+                                    <TableHead className="text-center">Action</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
                                 {permissions.data.length ? (
                                     permissions.data.map((permission, index) => (
-                                        <tr key={permission.id}>
-                                            <td className="border border-gray-200 px-4 py-2">{index + 1}</td>
-                                            <td className="border border-gray-200 px-4 py-2">{permission.name}</td>
-                                            <td className="border border-gray-200 px-4 py-2">
-                                                {new Date(permission.created_at).toLocaleDateString()}
-                                            </td>
-                                            <td className="border border-gray-200 px-4 py-2">
-                                                <Button onClick={() => router.visit(`/permissions/${permission.id}/edit`)}>Edit</Button>
-                                            </td>
-                                        </tr>
+                                        <TableRow key={permission.id}>
+                                            <TableCell>{index + 1}</TableCell>
+                                            <TableCell>{permission.name}</TableCell>
+                                            <TableCell>
+                                                {DateTime.fromISO(permission.created_at, { zone: 'utc' }).toLocal().toFormat('dd-MMM-yyyy hh :mm a')}
+                                            </TableCell>
+                                            <TableCell>
+                                                <div className="flex items-center justify-center gap-2">
+                                                    <Button
+                                                        variant="secondary"
+                                                        className="cursor-pointer"
+                                                        onClick={() => router.visit(`/permissions/${permission.id}/edit`)}
+                                                    >
+                                                        Edit
+                                                    </Button>
+                                                    <Button
+                                                        variant="destructive"
+                                                        className="cursor-pointer"
+                                                        onClick={() => {
+                                                            if (window.confirm('Are you sure you want to delete this permission?')) {
+                                                                router.delete(`/permissions/${permission.id}/delete`);
+                                                            }
+                                                        }}
+                                                    >
+                                                        Delete
+                                                    </Button>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
                                     ))
                                 ) : (
-                                    <tr>
-                                        <td colSpan={4} className="text-center">
+                                    <TableRow>
+                                        <TableCell colSpan={4} className="text-center">
                                             No permissions found.
-                                        </td>
-                                    </tr>
+                                        </TableCell>
+                                    </TableRow>
                                 )}
-                            </tbody>
-                        </table>
+                            </TableBody>
+                        </Table>
 
                         <Pagination>
                             <PaginationContent>
-                                {/* Previous Button */}
-                                {permissions.prev_page_url && (
-                                    <PaginationItem>
-                                        <PaginationPrevious
-                                            href={permissions.prev_page_url}
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                router.visit(permissions.prev_page_url as string);
-                                            }}
-                                        />
-                                    </PaginationItem>
-                                )}
-
-                                {/* Page Numbers with Ellipsis */}
                                 {permissions.links.map((link, index) => (
                                     <PaginationItem key={index}>
                                         {link.url ? (
@@ -115,26 +127,11 @@ export default function Permissions() {
                                                     router.visit(link.url!);
                                                 }}
                                             >
-                                                {link.label.replace(/&raquo;|&laquo;/g, '')} {/* Clean up special chars */}
+                                                {link.label.replace(/&raquo;|&laquo;/g, '')}
                                             </PaginationLink>
-                                        ) : (
-                                            <span className="px-2">...</span>
-                                        )}
+                                        ) : null}
                                     </PaginationItem>
                                 ))}
-
-                                {/* Next Button */}
-                                {permissions.next_page_url && (
-                                    <PaginationItem>
-                                        <PaginationNext
-                                            href={permissions.next_page_url}
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                router.visit(permissions.next_page_url as string);
-                                            }}
-                                        />
-                                    </PaginationItem>
-                                )}
                             </PaginationContent>
                         </Pagination>
                     </CardContent>
