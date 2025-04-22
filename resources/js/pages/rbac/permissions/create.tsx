@@ -9,7 +9,6 @@ import { Head, router, usePage } from '@inertiajs/react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Create Permission',
@@ -19,13 +18,13 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const FormSchema = z.object({
     name: z.string().refine(
-            (val) => {
-                return val.trim().split(/\s+/).length === 2;
-            },
-            {
-                message: 'Permission Name must be two words.',
-            },
-        ),
+        (val) => {
+            return val.trim().split(/\s+/).length === 2;
+        },
+        {
+            message: 'Permission Name must be two words.',
+        },
+    ),
 });
 
 export default function CreatePermission() {
@@ -67,11 +66,7 @@ export default function CreatePermission() {
                                                 <Input placeholder="resource permission" {...field} />
                                             </FormControl>
 
-                                            <FormMessage>
-                                                {form.formState.errors.name?.message || serverErrors?.name}
-                                            </FormMessage>
-
-
+                                            <FormMessage>{form.formState.errors.name?.message || serverErrors?.name}</FormMessage>
                                         </FormItem>
                                     )}
                                 />

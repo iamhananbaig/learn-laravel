@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\RoleController;
 
 Route::get('/', function () {
     return Inertia::render('welcome');
@@ -19,6 +20,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('permissions/{id}/edit', [PermissionController::class, 'edit'])->name('permissions.edit');
     Route::put('permissions/{id}', [PermissionController::class, 'update'])->name('permissions.update');
     Route::delete('permissions/{id}/delete', [PermissionController::class, 'destroy'])->name('permissions.destroy');
+    Route::get('roles', [RoleController::class, 'index'])->name('roles.index');
+    Route::get('roles/create', [RoleController::class, 'create'])->name('roles.create');
+    Route::post('roles', [RoleController::class, 'store'])->name('roles.store');
+    Route::get('roles/{id}/edit', [RoleController::class, 'edit'])->name('roles.edit');
+    Route::put('roles/{id}', [RoleController::class, 'update'])->name('roles.update');
+    Route::delete('roles/{id}/delete', [RoleController::class, 'destroy'])->name('roles.destroy');
 });
 
 require __DIR__ . '/settings.php';
