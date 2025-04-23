@@ -76,7 +76,7 @@ export default function EditPermission() {
                                         </FormItem>
                                     )}
                                 />
-                                <Button type="submit">Submit</Button>
+                                <Button type="submit">Update</Button>
                             </form>
                         </Form>
                     </CardContent>

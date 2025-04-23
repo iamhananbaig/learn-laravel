@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return Inertia::render('welcome');
@@ -26,6 +27,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('roles/{id}/edit', [RoleController::class, 'edit'])->name('roles.edit');
     Route::put('roles/{id}', [RoleController::class, 'update'])->name('roles.update');
     Route::delete('roles/{id}/delete', [RoleController::class, 'destroy'])->name('roles.destroy');
+    Route::get('users', [UserController::class, 'index'])->name('users.index');
+    Route::get('users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
+    Route::put('users/{id}', [UserController::class, 'update'])->name('users.update');
 });
 
 require __DIR__ . '/settings.php';

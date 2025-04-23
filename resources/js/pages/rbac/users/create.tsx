@@ -11,8 +11,8 @@ import { z } from 'zod';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Edit Role',
-        href: 'roles/edit',
+        title: 'Create Role',
+        href: 'roles/create',
     },
 ];
 
@@ -23,27 +23,25 @@ const FormSchema = z.object({
     permissions: z.array(z.number()).optional(),
 });
 
-export default function EditRole() {
+export default function CreateRole() {
     // Get server-side errors passed from Inertia response
     const { props } = usePage();
     const serverErrors = props.errors;
     const permissions = props.permissions as { id: number; name: string }[];
-    const haspermissions = props.haspermissions as number[];
-    const role = props.role as { id: number; name: string };
     const groupedPermissions = groupPermissions(permissions);
 
     // Setup react-hook-form with zod validation
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
-            name: role.name,
-            permissions: haspermissions,
+            name: '',
+            permissions: [],
         },
     });
 
     // Form submission handler
     function onSubmit(data: z.infer<typeof FormSchema>) {
-        router.put(`/roles/${role.id}`, data);
+        router.post('/roles', data);
     }
 
     function groupPermissions(permissions: { id: number; name: string }[]) {
@@ -70,7 +68,7 @@ export default function EditRole() {
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
                 <Card className="m-auto w-full max-w-xl">
                     <CardHeader>
-                        <CardTitle className="text-center text-lg font-semibold">Edit Role</CardTitle>
+                        <CardTitle className="text-center text-lg font-semibold">Create Role</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <Form {...form}>
@@ -131,7 +129,7 @@ export default function EditRole() {
                                     )}
                                 />
 
-                                <Button type="submit">Update</Button>
+                                <Button type="submit">Submit</Button>
                             </form>
                         </Form>
                     </CardContent>

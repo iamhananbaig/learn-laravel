@@ -18,6 +18,7 @@ class RoleController extends Controller
 
         return Inertia::render('rbac/roles/list', [
             'roles' => $roles,
+            'success' => session('success'),
         ]);
     }
     public function create()
