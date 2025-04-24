@@ -5,6 +5,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VendorController;
 
 Route::get('/', function () {
     return Inertia::render('welcome');
@@ -30,6 +31,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('users', [UserController::class, 'index'])->name('users.index');
     Route::get('users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
     Route::put('users/{id}', [UserController::class, 'update'])->name('users.update');
+    Route::get('vendors', [VendorController::class, 'index'])->name('vendors.index');
+    Route::get('vendors/create', [VendorController::class, 'create'])->name('vendors.create');
+    Route::post('vendors', [VendorController::class, 'store'])->name('vendors.store');
+    Route::get('vendors/{id}/edit', [VendorController::class, 'edit'])->name('vendors.edit');
 });
 
 require __DIR__ . '/settings.php';

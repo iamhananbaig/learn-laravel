@@ -49,6 +49,11 @@ const data = {
                 },
             ],
         },
+        {
+            title: 'Vendors',
+            url: '/vendors',
+            icon: LayoutDashboard,
+        },
     ],
 };
 

@@ -12,7 +12,6 @@ class PermissionController extends Controller
     public function index()
     {
         $permissions = Permission::orderBy('created_at', 'DESC')->paginate(10);
-
         return Inertia::render('rbac/permissions/list', [
             'permissions' => $permissions,
             'success' => session('success'),

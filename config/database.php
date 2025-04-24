@@ -111,6 +111,20 @@ return [
             // 'encrypt' => env('DB_ENCRYPT', 'yes'),
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
+        'telescope' => [
+            'driver'      => 'mysql',
+            'host'        => env('TELESCOPE_DB_HOST', '127.0.0.1'),
+            'port'        => env('TELESCOPE_DB_PORT', '3306'),
+            'database'    => env('TELESCOPE_DB_DATABASE', 'forge'),
+            'username'    => env('TELESCOPE_DB_USERNAME', 'forge'),
+            'password'    => env('TELESCOPE_DB_PASSWORD', ''),
+            'unix_socket' => env('TELESCOPE_DB_SOCKET', ''),
+            'charset'     => 'utf8mb4',
+            'collation'   => 'utf8mb4_unicode_ci',
+            'prefix'      => '',
+            'strict'      => true,
+            'engine'      => null,
+        ],
 
     ],
 
@@ -147,7 +161,7 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
+            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_') . '_database_'),
             'persistent' => env('REDIS_PERSISTENT', false),
         ],
 
@@ -170,5 +184,7 @@ return [
         ],
 
     ],
+
+
 
 ];
