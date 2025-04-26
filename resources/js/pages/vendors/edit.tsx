@@ -46,7 +46,7 @@ export default function EditPermission() {
         defaultValues: {
             name: vendor.name,
             ntn: vendor.ntn,
-            status: vendor.status,
+            status: Boolean(vendor.status),
         },
     });
 

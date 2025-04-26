@@ -100,10 +100,10 @@ export default function Vendors() {
                                             <TableCell>{vendor.created_by?.name}</TableCell>
                                             <TableCell>{vendor.updated_by?.name}</TableCell>
                                             <TableCell>
-                                                {DateTime.fromISO(vendor.created_at, { zone: 'utc' }).toLocal().toFormat('dd-MMM-yyyy hh :mm a')}
+                                                {DateTime.fromISO(vendor.created_at, { zone: 'utc' }).toLocal().toFormat('dd-MMM-yyyy ')}
                                             </TableCell>
                                             <TableCell>
-                                                {DateTime.fromISO(vendor.updated_at, { zone: 'utc' }).toLocal().toFormat('dd-MMM-yyyy hh :mm a')}
+                                                {DateTime.fromISO(vendor.updated_at, { zone: 'utc' }).toLocal().toFormat('dd-MMM-yyyy')}
                                             </TableCell>
                                             <TableCell>
                                                 <div className="flex items-center justify-center gap-2">

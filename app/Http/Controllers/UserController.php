@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Role;
@@ -25,14 +26,37 @@ class UserController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create() {}
+    public function create()
+    {
+        $roles = Role::orderBy('name', 'ASC')->get();
+        return Inertia::render('rbac/users/create', [
+            'roles' => $roles,
+        ]);
+    }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
     public function store(Request $request)
     {
-        //
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|min:3',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6',
+            'confirm_password' => 'required|same:password',
+        ]);
+
+        if ($validator->passes()) {
+            $user = new User();
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->password = Hash::make($request->password);
+            $user->banned = $request->banned;
+            $user->save();
+            $user->syncRoles($request->roles);
+            return redirect()->route('users.index')->with('success', 'User added successfully');
+        } else {
+            return redirect()->route('users.create')->withInput()->withErrors($validator);
+        }
     }
 
     /**
@@ -71,6 +95,7 @@ class UserController extends Controller
         if ($validator->passes()) {
             $user->name = $request->name;
             $user->email = $request->email;
+            $user->banned = $request->banned;
             $user->save();
             $user->syncRoles($request->roles);
             return redirect()->route('users.index')->with('success', 'User updated successfully');

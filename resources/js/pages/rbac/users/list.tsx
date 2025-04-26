@@ -21,6 +21,7 @@ type User = {
     id: number;
     name: string;
     email: string;
+    banned: boolean;
     roles: { name: string }[];
     created_at: string;
 };
@@ -74,6 +75,7 @@ export default function Users() {
                                     <TableHead>Name</TableHead>
                                     <TableHead>Email</TableHead>
                                     <TableHead>Roles</TableHead>
+                                    <TableHead>Status</TableHead>
                                     <TableHead>Created At</TableHead>
                                     <TableHead className="text-center">Action</TableHead>
                                 </TableRow>
@@ -97,6 +99,14 @@ export default function Users() {
                                                         </Badge>
                                                     ))}
                                                 </div>
+                                            </TableCell>
+                                            <TableCell>
+                                                <Badge
+                                                    variant="outline"
+                                                    className={`text-white hover:animate-pulse ${user.banned ? 'bg-red-500' : 'bg-green-500'}`}
+                                                >
+                                                    {user.banned ? 'Banned' : 'Active'}
+                                                </Badge>
                                             </TableCell>
                                             <TableCell>
                                                 {DateTime.fromISO(user.created_at, { zone: 'utc' }).toLocal().toFormat('dd-MMM-yyyy')}

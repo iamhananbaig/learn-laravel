@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Gate;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,6 +28,9 @@ class AppServiceProvider extends ServiceProvider
 
             $this->foreign('created_by')->references('id')->on('users')->onDelete('restrict');
             $this->foreign('updated_by')->references('id')->on('users')->onDelete('restrict');
+        });
+        Gate::before(function ($user, $ability) {
+            return $user->hasRole('superadmin') ? true : null;
         });
     }
 }

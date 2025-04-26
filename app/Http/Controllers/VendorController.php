@@ -6,9 +6,20 @@ use App\Models\Vendor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class VendorController extends Controller
+class VendorController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:view vendors', only: ['index']),
+            new Middleware('permission:create vendors', only: ['store', 'create']),
+            new Middleware('permission:edit vendors', only: ['edit', 'update']),
+            new Middleware('permission:delete vendors', only: ['delete']),
+        ];
+    }
     /**
      * Display a listing of the resource.
      */
@@ -48,14 +59,6 @@ class VendorController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
@@ -71,7 +74,21 @@ class VendorController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $vendor = Vendor::findOrFail($id);
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|min:3',
+            'ntn' => 'required|min:3',
+            'status' => 'required',
+        ]);
+        if ($validator->passes()) {
+            $vendor->name = $request->name;
+            $vendor->ntn = $request->ntn;
+            $vendor->status = $request->status;
+            $vendor->save();
+            return redirect()->route('vendors.index')->with('success', 'Vendor updated successfully');
+        } else {
+            return redirect()->route('vendors.create')->withInput()->withErrors($validator);
+        }
     }
 
     /**
@@ -79,6 +96,11 @@ class VendorController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $vendor = Vendor::find($id);
+        if ($vendor == null) {
+            return redirect()->route('vendors.index')->with('error', 'Vendor not found');
+        }
+        $vendor->delete();
+        return redirect()->route('vendors.index')->with('success', 'Vendor deleted successfully');
     }
 }

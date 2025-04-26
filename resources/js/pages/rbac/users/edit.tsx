@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -23,6 +24,7 @@ const FormSchema = z.object({
     email: z.string().email({
         message: 'must be a valid email.',
     }),
+    banned: z.boolean(),
     roles: z.array(z.number()).optional(),
 });
 
@@ -30,7 +32,7 @@ export default function EditUser() {
     // Get server-side errors passed from Inertia response
     const { props } = usePage();
     const serverErrors = props.errors;
-    const user = props.user as { id: number; name: string; email: string };
+    const user = props.user as { id: number; name: string; email: string; banned: boolean };
     const hasroles = props.hasroles as number[];
     const roles = props.roles as { id: number; name: string }[];
 
@@ -41,6 +43,7 @@ export default function EditUser() {
             name: user.name,
             email: user.email,
             roles: hasroles,
+            banned: Boolean(user.banned),
         },
     });
 
@@ -119,6 +122,35 @@ export default function EditUser() {
                                             <FormMessage />
                                         </FormItem>
                                     )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="banned"
+                                    render={({ field }) => {
+                                        const isBanned = field.value;
+                                        return (
+                                            <FormItem className="flex flex-col space-y-2">
+                                                <FormLabel>Ban</FormLabel>
+                                                <FormControl>
+                                                    <div className="flex items-center gap-4">
+                                                        <Switch
+                                                            checked={isBanned}
+                                                            onCheckedChange={field.onChange}
+                                                            className={
+                                                                isBanned
+                                                                    ? 'bg-red-500 data-[state=checked]:bg-red-600'
+                                                                    : 'bg-green-500 data-[state=unchecked]:bg-green-600'
+                                                            }
+                                                        />
+                                                        <span className={isBanned ? 'text-red-700' : 'text-green-700'}>
+                                                            {isBanned ? 'Banned' : 'Active'}
+                                                        </span>
+                                                    </div>
+                                                </FormControl>
+                                                <FormMessage>{form.formState.errors.banned?.message || serverErrors?.banned}</FormMessage>
+                                            </FormItem>
+                                        );
+                                    }}
                                 />
 
                                 <Button type="submit">Update</Button>
