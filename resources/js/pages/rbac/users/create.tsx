@@ -17,24 +17,32 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const FormSchema = z.object({
-    name: z.string().min(3, {
-        message: 'Name must be at least 3 characters.',
-    }),
-    email: z.string().email({
-        message: 'must be a valid email.',
-    }),
-    password: z.string().min(6, {
-        message: 'must be atleast 6 characters.',
-    }),
-    confirm_password: z.string().min(6, {
-        message: 'must be atleast 6 characters.',
-    }),
-    banned: z.boolean(),
-    roles: z.array(z.number()).optional(),
-});
+const FormSchema = z
+    .object({
+        name: z.string().min(3, {
+            message: 'Name must be at least 3 characters.',
+        }),
+        designation: z.string().min(3, {
+            message: 'Designation must be at least 3 characters.',
+        }),
+        email: z.string().email({
+            message: 'must be a valid email.',
+        }),
+        password: z.string().min(6, {
+            message: 'must be atleast 6 characters.',
+        }),
+        confirm_password: z.string().min(6, {
+            message: 'must be atleast 6 characters.',
+        }),
+        banned: z.boolean(),
+        roles: z.array(z.number()).optional(),
+    })
+    .refine((data) => data.password === data.confirm_password, {
+        message: 'Passwords do not match',
+        path: ['confirm_password'],
+    });
 
-export default function EditUser() {
+export default function CreateUser() {
     // Get server-side errors passed from Inertia response
     const { props } = usePage();
     const serverErrors = props.errors;
@@ -45,6 +53,7 @@ export default function EditUser() {
         resolver: zodResolver(FormSchema),
         defaultValues: {
             name: '',
+            designation: '',
             email: '',
             password: '',
             confirm_password: '',
@@ -64,7 +73,7 @@ export default function EditUser() {
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
                 <Card className="m-auto w-full max-w-xl">
                     <CardHeader>
-                        <CardTitle className="text-center text-lg font-semibold">Edit User</CardTitle>
+                        <CardTitle className="text-center text-lg font-semibold">Create User</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <Form {...form}>
@@ -93,6 +102,19 @@ export default function EditUser() {
                                                 <Input placeholder="Email" {...field} />
                                             </FormControl>
                                             <FormMessage>{form.formState.errors.email?.message || serverErrors?.email}</FormMessage>
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="designation"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Designation</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Designation" {...field} />
+                                            </FormControl>
+                                            <FormMessage>{form.formState.errors.designation?.message || serverErrors?.designation}</FormMessage>
                                         </FormItem>
                                     )}
                                 />
@@ -187,7 +209,7 @@ export default function EditUser() {
                                     }}
                                 />
 
-                                <Button type="submit">Update</Button>
+                                <Button type="submit">Submit</Button>
                             </form>
                         </Form>
                     </CardContent>

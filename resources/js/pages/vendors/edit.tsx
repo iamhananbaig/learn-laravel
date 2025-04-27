@@ -108,8 +108,8 @@ export default function EditPermission() {
                                                             onCheckedChange={field.onChange}
                                                             className={
                                                                 isActive
-                                                                    ? 'bg-green-500 data-[state=checked]:bg-green-600'
-                                                                    : 'bg-red-500 data-[state=unchecked]:bg-red-600'
+                                                                    ? 'bg-green-700 data-[state=checked]:bg-green-700'
+                                                                    : 'bg-red-700 data-[state=unchecked]:bg-red-700'
                                                             }
                                                         />
                                                         <span className={isActive ? 'text-green-700' : 'text-red-700'}>

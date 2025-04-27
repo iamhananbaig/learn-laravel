@@ -10,9 +10,9 @@ export default function AppLogoIcon(props: SVGAttributes<SVGElement>) {
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
         >
             <path d="M10 10.5 8 13l2 2.5" />
             <path d="m14 10.5 2 2.5-2 2.5" />

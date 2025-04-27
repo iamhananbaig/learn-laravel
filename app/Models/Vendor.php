@@ -9,7 +9,11 @@ class Vendor extends Model
 {
     use Trackable;
 
-    protected $guarded = ['created_by', 'updated_by'];
+    protected $fillable = [
+        'name',
+        'ntn',
+        'status',
+    ];
 
     public function createdBy()
     {

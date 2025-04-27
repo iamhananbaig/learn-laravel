@@ -20,6 +20,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 type User = {
     id: number;
     name: string;
+    designation: string;
     email: string;
     banned: boolean;
     roles: { name: string }[];
@@ -74,6 +75,7 @@ export default function Users() {
                                     <TableHead>#</TableHead>
                                     <TableHead>Name</TableHead>
                                     <TableHead>Email</TableHead>
+                                    <TableHead>Designation</TableHead>
                                     <TableHead>Roles</TableHead>
                                     <TableHead>Status</TableHead>
                                     <TableHead>Created At</TableHead>
@@ -87,6 +89,7 @@ export default function Users() {
                                             <TableCell>{index + 1}</TableCell>
                                             <TableCell>{user.name}</TableCell>
                                             <TableCell>{user.email}</TableCell>
+                                            <TableCell>{user.designation}</TableCell>
                                             <TableCell>
                                                 <div className="flex flex-wrap gap-1">
                                                     {user.roles.map((r) => (
@@ -103,7 +106,7 @@ export default function Users() {
                                             <TableCell>
                                                 <Badge
                                                     variant="outline"
-                                                    className={`text-white hover:animate-pulse ${user.banned ? 'bg-red-500' : 'bg-green-500'}`}
+                                                    className={`text-white hover:animate-pulse ${user.banned ? 'bg-red-700' : 'bg-green-700'}`}
                                                 >
                                                     {user.banned ? 'Banned' : 'Active'}
                                                 </Badge>

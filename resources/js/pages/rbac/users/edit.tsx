@@ -24,6 +24,9 @@ const FormSchema = z.object({
     email: z.string().email({
         message: 'must be a valid email.',
     }),
+    designation: z.string().min(3, {
+        message: 'must be atleast 3 characters.',
+    }),
     banned: z.boolean(),
     roles: z.array(z.number()).optional(),
 });
@@ -32,7 +35,7 @@ export default function EditUser() {
     // Get server-side errors passed from Inertia response
     const { props } = usePage();
     const serverErrors = props.errors;
-    const user = props.user as { id: number; name: string; email: string; banned: boolean };
+    const user = props.user as { id: number; name: string; email: string; banned: boolean; designation: string };
     const hasroles = props.hasroles as number[];
     const roles = props.roles as { id: number; name: string }[];
 
@@ -41,6 +44,7 @@ export default function EditUser() {
         resolver: zodResolver(FormSchema),
         defaultValues: {
             name: user.name,
+            designation: user.designation,
             email: user.email,
             roles: hasroles,
             banned: Boolean(user.banned),
@@ -92,6 +96,20 @@ export default function EditUser() {
                                 />
                                 <FormField
                                     control={form.control}
+                                    name="designation"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Designation</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Designation" {...field} />
+                                            </FormControl>
+
+                                            <FormMessage>{form.formState.errors.designation?.message || serverErrors?.designation}</FormMessage>
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
                                     name="roles"
                                     render={({ field }) => (
                                         <FormItem>
@@ -138,8 +156,8 @@ export default function EditUser() {
                                                             onCheckedChange={field.onChange}
                                                             className={
                                                                 isBanned
-                                                                    ? 'bg-red-500 data-[state=checked]:bg-red-600'
-                                                                    : 'bg-green-500 data-[state=unchecked]:bg-green-600'
+                                                                    ? 'bg-red-700 data-[state=checked]:bg-red-700'
+                                                                    : 'bg-green-700 data-[state=unchecked]:bg-green-700'
                                                             }
                                                         />
                                                         <span className={isBanned ? 'text-red-700' : 'text-green-700'}>

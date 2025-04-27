@@ -92,7 +92,7 @@ export default function Vendors() {
                                             <TableCell>
                                                 <Badge
                                                     variant="outline"
-                                                    className={`text-white hover:animate-pulse ${vendor.status ? 'bg-green-500' : 'bg-red-500'}`}
+                                                    className={`text-white hover:animate-pulse ${vendor.status ? 'bg-green-700' : 'bg-red-700'}`}
                                                 >
                                                     {vendor.status ? 'Active' : 'Disabled'}
                                                 </Badge>
@@ -100,10 +100,10 @@ export default function Vendors() {
                                             <TableCell>{vendor.created_by?.name}</TableCell>
                                             <TableCell>{vendor.updated_by?.name}</TableCell>
                                             <TableCell>
-                                                {DateTime.fromISO(vendor.created_at, { zone: 'utc' }).toLocal().toFormat('dd-MMM-yyyy ')}
+                                                {DateTime.fromISO(vendor.created_at, { zone: 'utc' }).toLocal().toFormat('dd-MMM-yyyy hh:mm')}
                                             </TableCell>
                                             <TableCell>
-                                                {DateTime.fromISO(vendor.updated_at, { zone: 'utc' }).toLocal().toFormat('dd-MMM-yyyy')}
+                                                {DateTime.fromISO(vendor.updated_at, { zone: 'utc' }).toLocal().toFormat('dd-MMM-yyyy hh:mm')}
                                             </TableCell>
                                             <TableCell>
                                                 <div className="flex items-center justify-center gap-2">
